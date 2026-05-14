@@ -103,7 +103,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           children: [
             Icon(Icons.check_circle, color: Colors.green, size: 32),
             SizedBox(width: 8),
-            Text('Registration Successful'),
+            Flexible(
+              child: Text(
+                'Registration Successful',
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
         content: Column(
