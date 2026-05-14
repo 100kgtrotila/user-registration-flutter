@@ -17,6 +17,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _confirmEmailController = TextEditingController();
 
   String? _selectedCountry;
   final List<String> _countries = ['Ukraine', 'Poland', 'Germany', 'USA', 'UK'];
@@ -83,6 +84,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       subscribeToNewsletter: _subscribeToNewsletter,
     );
 
+    if (user.age < 18) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('You must be 18 or older to register')),
+      );
+      return;
+    }
+
     _showSuccessDialog(user);
   }
 
@@ -135,6 +144,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _confirmEmailController.dispose();
     super.dispose();
   }
 
@@ -186,6 +196,26 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               const SizedBox(height: 16),
 
               TextFormField(
+                controller: _confirmEmailController,
+                decoration: const InputDecoration(
+                  labelText: 'Confirm Email',
+                  prefixIcon: Icon(Icons.mark_email_read),
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Confirm Email is required';
+                  }
+                  if (value != _emailController.text) {
+                    return 'Email addresses do not match';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              TextFormField(
                 controller: _phoneController,
                 decoration: const InputDecoration(
                   labelText: 'Phone Number',
@@ -216,15 +246,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               const SizedBox(height: 16),
 
-              DropdownButtonFormField(
+              DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   labelText: 'Country',
                   prefixIcon: Icon(Icons.flag),
                   border: OutlineInputBorder(),
                 ),
-                value: _selectedCountry,
+                initialValue: _selectedCountry,
                 items: _countries.map((country) {
-                  return DropdownMenuItem(value: country, child: Text(country));
+                  return DropdownMenuItem<String>(
+                    value: country,
+                    child: Text(country),
+                  );
                 }).toList(),
                 onChanged: (value) => setState(() => _selectedCountry = value),
                 validator: (value) => value == null ? 'Виберіть країну' : null,
@@ -232,27 +265,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               const SizedBox(height: 24),
 
               Text('Gender', style: TextStyle(fontSize: 16)),
-              Row(
-                children: [
-                  Expanded(
-                    child: RadioListTile(
-                      title: Text('Male'),
-                      value: 'Male',
-                      groupValue: _selectedGender,
-                      onChanged: (value) =>
-                          setState(() => _selectedGender = value),
+              RadioGroup<String>(
+                groupValue: _selectedGender,
+                onChanged: (value) => setState(() => _selectedGender = value),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: RadioListTile<String>(
+                        title: Text('Male'),
+                        value: 'Male',
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: RadioListTile(
-                      title: Text('Female'),
-                      value: 'Female',
-                      groupValue: _selectedGender,
-                      onChanged: (value) =>
-                          setState(() => _selectedGender = value),
+                    Expanded(
+                      child: RadioListTile<String>(
+                        title: Text('Female'),
+                        value: 'Female',
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(height: 24),
 

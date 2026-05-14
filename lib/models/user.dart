@@ -18,7 +18,9 @@ class User {
   });
 
   String get formattedBirthDate {
-    return '${birthDate.day}/${birthDate.month}/${birthDate.year}';
+    final day = birthDate.day.toString().padLeft(2, '0');
+    final month = birthDate.month.toString().padLeft(2, '0');
+    return '$day/$month/${birthDate.year}';
   }
 
   int get age {
