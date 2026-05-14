@@ -49,28 +49,28 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     if (_birthDate == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Виберіть дату народження')));
+      ).showSnackBar(SnackBar(content: Text('Choose birth date')));
       return;
     }
 
     if (_selectedCountry == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Виберіть країну')));
+      ).showSnackBar(SnackBar(content: Text('Choose country')));
       return;
     }
 
     if (_selectedGender == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Виберіть стать')));
+      ).showSnackBar(SnackBar(content: Text('Choose gender')));
       return;
     }
 
     if (!_agreeToTerms) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Погодьтесь з умовами')));
+      ).showSnackBar(SnackBar(content: Text('Agree to terms')));
       return;
     }
 
